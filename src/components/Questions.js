@@ -78,7 +78,7 @@ export function Questions({onFinish}) {
         <div className="page6">
           <div className="question-container">
             <div className="question-header">
-              <label>What are your school classes? </label>
+              <label>What are your favourite courses? </label>
             </div>
             <input type="text" className="question-input" value={schoolClasses} onChange={(e) => setSchoolClasses(e.target.value)}/>
             <button className="button" onClick={handleNext}>Next</button>
