@@ -64,3 +64,41 @@ export const getHobbies = async (query) => {
 
   return results.map((result) => ({value: result, type: "hobby"}));
 }
+
+export const getPersonality_Traits = async (query) => {
+  let prompt = `List 5 personality traits related to ${query}:`;
+  const gptResponse = await openai.complete({
+    engine: 'text-davinci-003',
+    prompt: prompt,
+    maxTokens: 200,
+    temperature: 0.5,
+    topP: 1,
+    presencePenalty: 0.5,
+    frequencyPenalty: 0.52,
+    bestOf: 1,
+    n: 1
+  });
+
+  const results = stringToList(gptResponse.data.choices[0].text);
+
+  return results.map((result) => ({value: result, type: "personality"}));
+}
+
+export const getTalents = async (query) => {
+  let prompt = `List 5 talents related to ${query}:`;
+  const gptResponse = await openai.complete({
+    engine: 'text-davinci-003',
+    prompt: prompt,
+    maxTokens: 200,
+    temperature: 0.5,
+    topP: 1,
+    presencePenalty: 0.5,
+    frequencyPenalty: 0.52,
+    bestOf: 1,
+    n: 1
+  });
+
+  const results = stringToList(gptResponse.data.choices[0].text);
+
+  return results.map((result) => ({value: result, type: "talents"}));
+}
