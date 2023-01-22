@@ -67,6 +67,7 @@ export function Visualization({data, onAddItem, onDeleteItem, onNext, loading}) 
       <div id="vis-instructions">
         Pan and zoom.
       </div>
+      
       <div id="vis-add-delete-form">
         <Dropdown>
           <Dropdown.Toggle as={CustomToggle} id="vis-add-toggle">
@@ -78,6 +79,7 @@ export function Visualization({data, onAddItem, onDeleteItem, onNext, loading}) 
                 id="vis-add-input"
                 type="text"
                 value={item}
+                placeholder={'Add Traits/Interests'}
                 onChange={(event) => setItem(event.target.value)}
               />
               <Button
