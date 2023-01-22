@@ -1,0 +1,140 @@
+.main{
+    height:calc(100vh - 10rem);
+    width:calc(100vw - 10rem);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+
+    border: 5rem solid white;
+    background-color: #06D6A0;
+}
+
+.arrow {
+    position:absolute;
+    bottom: 14rem;
+    font-size: 30px;
+    transform: translate(-50%, -50%) rotate(270deg);
+    cursor: pointer;
+}
+
+.arrow span {
+    display: block;
+    width: 1.5vw;
+    height: 1.5vw;
+    border-bottom: 5px solid white;
+    border-right: 5px solid white;
+    transform: rotate(45deg);
+    margin: -10px;
+    animation: animate 2s infinite;
+}
+
+.arrow span:nth-child(2) {
+    animation-delay: -0.2s;
+}
+
+.arrow span:nth-child(3) {
+    animation-delay: -0.4s;
+}
+
+@keyframes animate {
+    0% {
+        opacity: 0;
+        transform: rotate(45deg) translate(-20px, -20px);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(45deg) translate(20px, 20px);
+    }
+}
+h1{
+    text-align:center;
+    text-transform: uppercase;
+    color: #F1FAEE;
+    font-size: 4rem;
+}
+
+.roller{
+    height: 4.125rem;
+    line-height: 4rem;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #1D3557;
+}
+
+
+.role-text{
+    font-size: 3rem;
+    font-style: italic;
+    letter-spacing: 1rem;
+    margin-top: 0;
+    color: #eff1f1;
+
+}
+
+.roller .rolltext {
+    position: absolute;
+    top: 0;
+    animation: slide 6s infinite;
+}
+
+@keyframes slide {
+    0%{
+        top:0;
+    }
+    25%{
+        top: -4rem;
+    }
+    50%{
+        top: -8rem;
+    }
+    72.5%{
+        top: -12.25rem;
+    }
+}
+
+@media screen and (max-width: 600px){
+    h1{
+        text-align:center;
+        text-transform: uppercase;
+        color: #F1FAEE;
+        font-size: 2.125rem;
+    }
+
+    .roller{
+        height: 2.6rem;
+        line-height: 2.125rem;
+    }
+
+    .role-text {
+        font-size: 1rem;
+        letter-spacing: 0.1rem;
+    }
+
+    .roller .rolltext {
+        animation: slide-mob 6s infinite;
+    }
+
+    @keyframes slide-mob {
+        0%{
+            top:0;
+        }
+        25%{
+            top: -2.125rem;
+        }
+        50%{
+            top: -4.25rem;
+        }
+        72.5%{
+            top: -6.375rem;
+        }
+    }
+}

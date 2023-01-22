@@ -4,6 +4,7 @@ import {Visualization} from "./components/Visualization";
 import ImageOne from "./components/ImageOne";
 import ImageTwo from "./components/ImageTwo";
 import ImageThree from "./components/ImageThree";
+import {WelcomePage} from "./components/WelcomePage";
 
 const initialData = [
   {
@@ -61,44 +62,26 @@ const initialData = [
 ];
 
 function App() {
-  const [Name, setName] = useState("");
-  const [Age, setAge] = useState("");
-  const [Talent, setTalent] = useState("");
-  const [Interest, setInterest] = useState("");
-  const [School_classes, set_School_classes] = useState("");
-  const [Extracurriculars, setExtracurriculars] = useState("");
-  const [Personality_traits, set_Personality_traits] = useState("");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [talent, setTalent] = useState("");
+  const [interest, setInterest] = useState("");
+  const [schoolClasses, setSchoolClasses] = useState("");
+  const [extracurriculars, setExtracurriculars] = useState("");
+  const [personalityTraits, setPersonalityTraits] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1)
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setCurrentPage(currentPage + 1);
-  }
+  };
 
   return (
     <div id="app">
       <form onSubmit={handleSubmit}>
         {currentPage === 1 && (
-          <div className="main">
-            <h1>Who  Will  You  Be?
-              <div className="roller">
-                <span className="rolltext">
-                  PROGRAMMER<br/>
-                  DOCTOR<br/>
-                  ARTIST<br/>
-                  <span className="role-text">LET'S FIND OUT</span><br/>
-                </span>
-              </div>
-            </h1>
-            <button>
-              <div className="arrow">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </button>
-          </div>
+          <WelcomePage />
         )}
         {currentPage === 2 && (
           <div className="page2">
@@ -106,7 +89,7 @@ function App() {
               <div className="question-header">
                 <label>What is your name? </label>
               </div>
-              <input type="text" className="question-input" value={Name} onChange={(e) => setName(e.target.value)}/>
+              <input type="text" className="question-input" value={name} onChange={(e) => setName(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -117,7 +100,7 @@ function App() {
               <div className="question-header">
                 <label>How old are you? </label>
               </div>
-              <input type="text" className="question-input" value={Age} onChange={(e) => setAge(e.target.value)}/>
+              <input type="text" className="question-input" value={age} onChange={(e) => setAge(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -128,7 +111,7 @@ function App() {
               <div className="question-header">
                 <label>What are your talents? </label>
               </div>
-              <input type="text" className="question-input" value={Talent} onChange={(e) => setTalent(e.target.value)}/>
+              <input type="text" className="question-input" value={talent} onChange={(e) => setTalent(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -139,7 +122,7 @@ function App() {
               <div className="question-header">
                 <label>What are your interests? </label>
               </div>
-              <input type="text" className="question-input" value={Interest} onChange={(e) => setInterest(e.target.value)}/>
+              <input type="text" className="question-input" value={interest} onChange={(e) => setInterest(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -150,7 +133,7 @@ function App() {
               <div className="question-header">
                 <label>What are your school classes? </label>
               </div>
-              <input type="text" className="question-input" value={School_classes} onChange={(e) => set_School_classes(e.target.value)}/>
+              <input type="text" className="question-input" value={schoolClasses} onChange={(e) => setSchoolClasses(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -161,7 +144,7 @@ function App() {
               <div className="question-header">
                 <label>What are your extracurriculars? </label>
               </div>
-              <input type="text" className="question-input" value={Extracurriculars} onChange={(e) => setExtracurriculars(e.target.value)}/>
+              <input type="text" className="question-input" value={extracurriculars} onChange={(e) => setExtracurriculars(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
@@ -172,7 +155,7 @@ function App() {
               <div className="question-header">
                 <label>What are some of your personality traits? </label>
               </div>
-              <input type="text" className="question-input" value={Personality_traits} onChange={(e) => set_Personality_traits(e.target.value)}/>
+              <input type="text" className="question-input" value={personalityTraits} onChange={(e) => setPersonalityTraits(e.target.value)}/>
               <button type="Submit" className="button">Next</button>
             </div>
           </div>
