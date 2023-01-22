@@ -1,12 +1,106 @@
 import React, {useEffect, useState} from "react";
 import * as d3 from "d3";
 import "./Visualization.css";
+import {Button, Dropdown, FormControl} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 
-function randomValue(start, end) {
-  return start + Math.random() * (end - start);
+const CustomToggle = React.forwardRef(({ children, onClick, id, show }, ref) => (
+  <Button
+    id={id}
+    className={show ? "active" : ""}
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </Button>
+));
+
+const CustomMenu = React.forwardRef(
+  ({ children, style, className, 'aria-labelledby': labeledBy, id }, ref) => {
+    return (
+      <div
+        id={id}
+        ref={ref}
+        style={style}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+export function Visualization({data, onAddItem, onDeleteItem}) {
+  const [deleting, setDeleting] = useState(false);
+  const [lifeStage, setLifeStage] = useState(0);
+  const [item, setItem] = useState("");
+
+  const addItem = () => {
+    onAddItem(
+      {
+        lifeStage: lifeStage,
+        value: item,
+      }
+    );
+
+    setItem("");
+  };
+
+  const deleteItem = (item) => {
+    onDeleteItem(item);
+  };
+
+  return (
+    <div>
+      <Chart
+        data={data}
+        deleting={deleting}
+        handleDelete={deleteItem}
+      />
+      <div id="vis-instructions">
+        Pan and zoom.
+      </div>
+      <div id="vis-add-delete-form">
+        <Dropdown>
+          <Dropdown.Toggle as={CustomToggle} id="vis-add-toggle">
+            <FontAwesomeIcon icon={faPlus}/>
+          </Dropdown.Toggle>
+          <Dropdown.Menu as={CustomMenu} id="vis-add-menu">
+            <div>
+              <FormControl
+                id="vis-add-input"
+                type="text"
+                value={item}
+                onChange={(event) => setItem(event.target.value)}
+              />
+              <Button
+                id="vis-add-button"
+                onClick={addItem}
+                disabled={item.length === 0}
+              >
+                Add
+              </Button>
+            </div>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Button
+          id="vis-delete-toggle"
+          className={deleting ? "active" : ""}
+          onClick={() => setDeleting(!deleting)}
+        >
+          <FontAwesomeIcon icon={faTimes}/>
+        </Button>
+      </div>
+    </div>
+  );
 }
 
-export function Visualization({ data, deleting, handleDelete }) {
+function Chart({ data, deleting, handleDelete }) {
   const ref = React.useRef();
   const [k, setK] = useState(1);
   const [x, setX] = useState(0);
