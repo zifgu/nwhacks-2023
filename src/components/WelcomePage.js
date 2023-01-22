@@ -1,7 +1,7 @@
 import React from "react";
 import './WelcomePage.css';
 
-export function WelcomePage() {
+export function WelcomePage({onStart}) {
   return (
     <div className="main">
       <h1>Who  Will  You  Be?
@@ -14,7 +14,7 @@ export function WelcomePage() {
           </span>
         </div>
       </h1>
-      <button>
+      <button onClick={onStart}>
         <div className="arrow">
           <span></span>
           <span></span>

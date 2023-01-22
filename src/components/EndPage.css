@@ -1,0 +1,32 @@
+.end-page {
+    border: solid 5rem #fbfbfb;
+    color:#fbfbfb;
+}
+
+.image{
+    position: relative;
+    height: 100vh;
+}
+
+.image1{
+    position: relative;
+    height:100vh;
+
+}
+.content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 100vh;
+    width:100%;
+}
+
+.content span.img-txt{
+    background-color: #333;
+    text-transform: uppercase;
+    color:#fff;
+    padding:1rem;
+    font-size: 1.5rem;
+    letter-spacing: 10px;
+}
