@@ -4,7 +4,7 @@ import {Visualization} from "./components/Visualization";
 import {WelcomePage} from "./components/WelcomePage";
 import {Questions} from "./components/Questions";
 import {EndPage} from "./components/EndPage";
-import {getExtracurriculars, getHobbies, getSchoolSubjects} from "./api/openai";
+import {getExtracurriculars, getFutureJob, getHobbies, getMajor, getSchoolSubjects} from "./api/openai";
 
 const nextLifeStages = [
   // 0: next = High school
@@ -21,8 +21,8 @@ const nextLifeStages = [
   // 1: next = University
   [
     {
-      function: getSchoolSubjects,
-      inputs: ["interests", "schoolSubjects"],
+      function: getMajor,
+      inputs: ["personalityTraits", "schoolSubjects"],
     },
     {
       function: getExtracurriculars,
@@ -34,6 +34,10 @@ const nextLifeStages = [
     {
       function: getHobbies,
       inputs: ["interests"],
+    },
+    {
+      function: getFutureJob,
+      inputs: ["personalityTraits", "major"],
     },
   ],
 ];
@@ -56,7 +60,6 @@ const fetchNextLifeStage = async (lifeStage, dataSoFar) => {
   const functionsToCall = nextLifeStages[lifeStage];
 
   // Map: item type -> list of item values under that type
-  // TODO: do we want to exclude past life stages?
   const dataGroupedByType = getDataValuesByType(dataSoFar);
 
   const results = await Promise.allSettled(functionsToCall.map((f) => {

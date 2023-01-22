@@ -3,8 +3,7 @@ const openai = new OpenAI(process.env.REACT_APP_OPENAI_API_KEY);
 
 function stringToList(listAsString) {
   const lines = listAsString.split("\n")
-    .filter((str) => str.length > 0);
-
+    .filter((str) => str.trim().length > 0);
   return lines.map((line) => line.split(".")[1].trim());
 }
 
@@ -74,8 +73,8 @@ export const getHobbies = async (...query) => {
   return results.map((result) => ({value: result, type: "interests"}));
 }
 
-export const getPersonality_Traits = async (...query) => {
-  let prompt = `List 5 personality traits related to ${query.join(", ")}:`;
+export const getMajor = async (personalityTraits, schoolSubjects) => {
+  let prompt = `List 5 possible college majors for someone ${personalityTraits.join(",")} and whose favourite classes are ${schoolSubjects.join(",")}:`;
 
   console.log(prompt);
 
@@ -93,11 +92,11 @@ export const getPersonality_Traits = async (...query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "personalityTraits"}));
+  return results.map((result) => ({value: result, type: "major"}));
 }
 
-export const getTalents = async (...query) => {
-  let prompt = `List 5 talents related to ${query.join(", ")}:`;
+export const getFutureJob = async (personalityTraits, major) => {
+  let prompt = `List 5 possible careers for a ${major} major who is ${personalityTraits.join(", ")}:`;
 
   console.log(prompt);
 
@@ -115,5 +114,5 @@ export const getTalents = async (...query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "talents"}));
+  return results.map((result) => ({value: result, type: "jobs"}));
 }
