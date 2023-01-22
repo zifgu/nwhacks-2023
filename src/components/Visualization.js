@@ -14,7 +14,14 @@ export function Visualization({ data, width }) {
 
   useEffect(
     () => {
-      const chart = d3.select(ref.current);
+      const chart = d3.select(ref.current)
+        .append("svg")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .call(d3.zoom().on("zoom", function () {
+          chart.attr("transform", d3.zoomTransform(this))
+        }))
+        .append("g");
 
       const numLifeStages = [...new Set(d3.map(data, d => d.lifeStage))].length;
       const radiusStep = width / (numLifeStages * 2);
@@ -67,8 +74,6 @@ export function Visualization({ data, width }) {
   );
 
   return (
-    <svg width={width} height={width}>
-      <g ref={ref} id="chart" transform={`translate(${center[0]}, ${center[1]})`} />
-    </svg>
-  )
+    <div id="vis" ref={ref}></div>
+  );
 }
