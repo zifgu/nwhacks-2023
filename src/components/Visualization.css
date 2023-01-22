@@ -1,38 +1,45 @@
 #vis {
-    height: 100vh;
-    width: 100vw;
+    height: 90vh;
+    width: 90vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 5px  solid black;
+    zoom: 75%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 4rem;
 }
 
 #vis-instructions {
-    position: absolute;
+    /* position: absolute; */
     top: 2rem;
     width: 100vw;
-
+    background-color: #99DDC8;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 30px;
 }
 
 #vis-add-delete-form {
-    position: absolute;
-    bottom: 1.2rem;
-    width: 100vw;
-    left: 25px;
-
+    /* position: absolute; */
+    bottom: 1rem;
+    width: 80vw;
     display: flex;
-    flex-direction: row;
-    justify-content: start;
-    gap: 1.2rem;
+    /* flex-direction: column-reverse; */
+    justify-content:space-between;
+    gap: -2rem;
 }
 
 #vis-add-menu {
     padding: 0;
     border: none;
     box-shadow: 0 0 50px rgb(0 0 0 / 25%);
+    margin-bottom: 1rem;
 }
 
 #vis-add-menu > div {
@@ -48,17 +55,30 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-
     border: none;
     background-color: var(--bs-gray-100);
     color: black;
     box-shadow: 0 0 20px rgb(0 0 0 / 25%);
+    margin-bottom: 4rem;
 }
 
+#vis-add-toggle{
+    color:#99DDC8
+}
+#vis-delete-toggle{
+    color: #EF476F;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.dropdown{
+    margin-right: auto;
+    margin-left: auto;
+}
 .dropdown.show #vis-add-toggle {
     /* Button that toggles add menu is active */
     background-color: lightseagreen;
-    position: relative;
 }
 
 #vis-delete-toggle.active {
@@ -67,25 +87,39 @@
 }
 
 #vis-add-button {
-    /* "Add" button */
+    font-size: 20px;
+    background-color: #99DDC8;
+    color: antiquewhite;
 }
 
 #vis-add-input {
-    /* Input field for adding new content */
+    font-size: 20px;
 }
 
-#vis-next-button {
-    /* "Next" button */
-}
-
-.item {
-    /* Circles */
-}
 .item.deleting:hover {
     /* Circles in delete mode */
     opacity: 75%;
+
 }
 
 .label {
+    /* Text on circles */
+    color:aliceblue;
     pointer-events: none;
+}
+
+#vis-next-button{
+    /* margin-bottom: 1rem; */
+    font-size: 20px;
+    margin-left: -10rem;
+    background-color: #99DDC8;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 43%;
 }
