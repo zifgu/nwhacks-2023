@@ -25,12 +25,13 @@
     display: flex;
     flex-direction: row;
     justify-content: start;
+    gap: 1rem;
 }
 
 #vis-add-menu {
+    padding: 0;
     border: none;
     box-shadow: 0 0 50px rgb(0 0 0 / 25%);
-    padding: 0;
 }
 
 #vis-add-menu > div {
@@ -47,18 +48,36 @@
     height: 3rem;
     border-radius: 50%;
 
+    border: none;
+    background-color: var(--bs-gray-100);
+    color: black;
+    box-shadow: 0 0 20px rgb(0 0 0 / 25%);
+}
+
+.dropdown.show #vis-add-toggle {
+    /* Button that toggles add menu is active */
+    background-color: lightseagreen;
+}
+
+#vis-delete-toggle.active {
+    /* Button that toggles delete mode is active */
+    background-color: lightcoral;
 }
 
 #vis-add-button {
-
+    /* "Add" button */
 }
 
 #vis-add-input {
-
+    /* Input field for adding new content */
 }
 
 .item {
     /* Circles */
+}
+.item.deleting:hover {
+    /* Circles in delete mode */
+    opacity: 75%;
 }
 
 .label {

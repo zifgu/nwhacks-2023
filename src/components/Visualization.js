@@ -41,7 +41,7 @@ export function Visualization({ data, deleting, handleDelete }) {
       const circles = chart.selectAll("circle")
         .data(data, d => d.value)
         .join("circle")
-        .attr("class", "item")
+        .attr("class", () => "item " + (deleting ? "deleting" : ""))
         .attr("fill", (d) => deleting ? deletingColourScale(d.lifeStage) : regularColourScale(d.lifeStage))
         .attr("r", () => circleRadius)
         .on("click", (event) => {

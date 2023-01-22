@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import './App.css';
 import {Visualization} from "./components/Visualization";
 import {Button, Dropdown, FormControl} from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 
 const initialData = [
   {
@@ -60,9 +60,10 @@ const initialData = [
   },
 ];
 
-const CustomToggle = React.forwardRef(({ children, onClick, id }, ref) => (
+const CustomToggle = React.forwardRef(({ children, onClick, id, show }, ref) => (
   <Button
     id={id}
+    className={show ? "active" : ""}
     ref={ref}
     onClick={(e) => {
       e.preventDefault();
@@ -123,7 +124,7 @@ function App() {
       <div id="vis-add-delete-form">
         <Dropdown>
           <Dropdown.Toggle as={CustomToggle} id="vis-add-toggle">
-            +
+            <FontAwesomeIcon icon={faPlus}/>
           </Dropdown.Toggle>
           <Dropdown.Menu as={CustomMenu} id="vis-add-menu">
             <div>
@@ -145,9 +146,10 @@ function App() {
         </Dropdown>
         <Button
           id="vis-delete-toggle"
+          className={deleting ? "active" : ""}
           onClick={() => setDeleting(!deleting)}
         >
-          x
+          <FontAwesomeIcon icon={faTimes}/>
         </Button>
       </div>
     </div>
