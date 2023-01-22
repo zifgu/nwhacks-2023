@@ -4,6 +4,7 @@ import "./Visualization.css";
 import {Button, Dropdown, FormControl} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {Loading} from "./Loading";
 
 const CustomToggle = React.forwardRef(({ children, onClick, id, show }, ref) => (
   <Button
@@ -35,7 +36,7 @@ const CustomMenu = React.forwardRef(
   },
 );
 
-export function Visualization({data, onAddItem, onDeleteItem}) {
+export function Visualization({data, onAddItem, onDeleteItem, onNext, loading}) {
   const [deleting, setDeleting] = useState(false);
   const [lifeStage, setLifeStage] = useState(0);
   const [item, setItem] = useState("");
@@ -57,6 +58,7 @@ export function Visualization({data, onAddItem, onDeleteItem}) {
 
   return (
     <div>
+      {loading && <Loading />}
       <Chart
         data={data}
         deleting={deleting}
@@ -94,6 +96,12 @@ export function Visualization({data, onAddItem, onDeleteItem}) {
           onClick={() => setDeleting(!deleting)}
         >
           <FontAwesomeIcon icon={faTimes}/>
+        </Button>
+        <Button
+          id="vis-next-button"
+          onClick={() => onNext()}
+        >
+          Next
         </Button>
       </div>
     </div>

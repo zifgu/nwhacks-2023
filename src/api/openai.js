@@ -8,8 +8,11 @@ function stringToList(listAsString) {
   return lines.map((line) => line.split(".")[1].trim());
 }
 
-export const getSchoolSubjects = async (query) => {
-  let prompt = `List 5 school subjects related to ${query}:`;
+export const getSchoolSubjects = async (...query) => {
+  let prompt = `List 5 school subjects related to ${query.join(", ")}:`;
+
+  console.log(prompt);
+
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: prompt,
@@ -24,11 +27,14 @@ export const getSchoolSubjects = async (query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "schoolSubject"}));
+  return results.map((result) => ({value: result, type: "schoolSubjects"}));
 }
 
-export const getExtracurriculars = async (query) => {
-  let prompt = `List 5 extracurricular activities related to ${query}:`;
+export const getExtracurriculars = async (...query) => {
+  let prompt = `List 5 extracurricular activities related to ${query.join(", ")}:`;
+
+  console.log(prompt);
+
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: prompt,
@@ -43,11 +49,14 @@ export const getExtracurriculars = async (query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "extracurricular"}));
+  return results.map((result) => ({value: result, type: "extracurriculars"}));
 }
 
-export const getHobbies = async (query) => {
-  let prompt = `List 5 hobbies related to ${query}:`;
+export const getHobbies = async (...query) => {
+  let prompt = `List 5 hobbies related to ${query.join(", ")}:`;
+
+  console.log(prompt);
+
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: prompt,
@@ -62,11 +71,14 @@ export const getHobbies = async (query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "hobby"}));
+  return results.map((result) => ({value: result, type: "interests"}));
 }
 
-export const getPersonality_Traits = async (query) => {
-  let prompt = `List 5 personality traits related to ${query}:`;
+export const getPersonality_Traits = async (...query) => {
+  let prompt = `List 5 personality traits related to ${query.join(", ")}:`;
+
+  console.log(prompt);
+
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: prompt,
@@ -81,11 +93,14 @@ export const getPersonality_Traits = async (query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "Personality"}));
+  return results.map((result) => ({value: result, type: "personalityTraits"}));
 }
 
-export const getTalents = async (query) => {
-  let prompt = `List 5 talents related to ${query}:`;
+export const getTalents = async (...query) => {
+  let prompt = `List 5 talents related to ${query.join(", ")}:`;
+
+  console.log(prompt);
+
   const gptResponse = await openai.complete({
     engine: 'text-davinci-003',
     prompt: prompt,
@@ -100,5 +115,5 @@ export const getTalents = async (query) => {
 
   const results = stringToList(gptResponse.data.choices[0].text);
 
-  return results.map((result) => ({value: result, type: "Talents"}));
+  return results.map((result) => ({value: result, type: "talents"}));
 }
