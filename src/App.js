@@ -5,6 +5,8 @@ import {WelcomePage} from "./components/WelcomePage";
 import {Questions} from "./components/Questions";
 import {EndPage} from "./components/EndPage";
 import {Loading} from "./components/Loading";
+import {getSchoolSubjects} from "./api/openai1";
+import {getExtracurriculars} from "./api/openai2";
 
 const initialData = [
   {
@@ -61,6 +63,17 @@ const initialData = [
   },
 ];
 
+const fetchData = async (queries) => {
+  const results = await Promise.allSettled([
+    getSchoolSubjects(queries.schoolClasses),
+    getExtracurriculars(queries.extracurriculars),
+  ]);
+
+  return results
+    .filter((result) => result.status === "fulfilled")
+    .map((result) => result.value);
+};
+
 function App() {
   // Possible values: "welcome", "questions", "loading", "vis", "end"
   const [currentPage, setCurrentPage] = useState("welcome")
@@ -68,8 +81,10 @@ function App() {
   const [data, setData] = useState(initialData);
 
   const fetchFirstLifeStage = (info) => {
-    // TODO:
+    // TODO: visualize results
     console.log(info);
+    const allResults = fetchData(info);
+    console.log(allResults);
   };
 
   let pageContent = null;
