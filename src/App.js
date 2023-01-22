@@ -5,7 +5,7 @@ import {WelcomePage} from "./components/WelcomePage";
 import {Questions} from "./components/Questions";
 import {EndPage} from "./components/EndPage";
 import {Loading} from "./components/Loading";
-import {getExtracurriculars, getHobbies, getSchoolSubjects} from "./api/openai";
+import {getExtracurriculars, getHobbies, getPersonality_Traits, getSchoolSubjects, getTalents} from "./api/openai";
 
 const initialData = [
   {
@@ -64,9 +64,11 @@ const initialData = [
 
 const fetchData = async (queries) => {
   const results = await Promise.allSettled([
-    getSchoolSubjects(queries.schoolClasses),
-    getExtracurriculars(queries.extracurriculars),
-    getHobbies(queries.interest),
+      getSchoolSubjects(queries.schoolClasses),
+      getExtracurriculars(queries.extracurriculars),
+      getHobbies(queries.interest),
+      getPersonality_Traits(queries.personalityTraits),
+      getTalents(queries.talent),
   ]);
 
   const allResults = []
