@@ -74,9 +74,10 @@ const CustomToggle = React.forwardRef(({ children, onClick, id }, ref) => (
 ));
 
 const CustomMenu = React.forwardRef(
-  ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+  ({ children, style, className, 'aria-labelledby': labeledBy, id }, ref) => {
     return (
       <div
+        id={id}
         ref={ref}
         style={style}
         className={className}
@@ -102,37 +103,49 @@ function App() {
         value: item,
       }
     ]);
+
+    setItem("");
   }
 
   return (
     <div>
       <Visualization
         data={data}
+        deleting={deleting}
+        handleDelete={(d) => {
+          const newData = data.filter((item) => item.lifeStage !== d.lifeStage || item.value !== d.value);
+          setData(newData);
+        }}
       />
       <div id="vis-instructions">
         Pan and zoom.
       </div>
       <div id="vis-add-delete-form">
         <Dropdown>
-          <Dropdown.Toggle as={CustomToggle} id="vis-add-button">
+          <Dropdown.Toggle as={CustomToggle} id="vis-add-toggle">
             +
           </Dropdown.Toggle>
-          <Dropdown.Menu as={CustomMenu}>
-            <FormControl
-              id="vis-add-input"
-              type="text"
-              value={item}
-              onChange={(event) => setItem(event.target.value)}
-            />
-            <Button
-              onClick={addItem}
-            >
-              Add
-            </Button>
+          <Dropdown.Menu as={CustomMenu} id="vis-add-menu">
+            <div>
+              <FormControl
+                id="vis-add-input"
+                type="text"
+                value={item}
+                onChange={(event) => setItem(event.target.value)}
+              />
+              <Button
+                id="vis-add-button"
+                onClick={addItem}
+                disabled={item.length === 0}
+              >
+                Add
+              </Button>
+            </div>
           </Dropdown.Menu>
         </Dropdown>
         <Button
-          id="vis-delete-button"
+          id="vis-delete-toggle"
+          onClick={() => setDeleting(!deleting)}
         >
           x
         </Button>

@@ -27,10 +27,29 @@
     justify-content: start;
 }
 
-#vis-add-button, #vis-delete-button {
+#vis-add-menu {
+    border: none;
+    box-shadow: 0 0 50px rgb(0 0 0 / 25%);
+    padding: 0;
+}
+
+#vis-add-menu > div {
+    width: 25vw;
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+
+    border-radius: var(--bs-border-radius-lg);
+}
+
+#vis-add-toggle, #vis-delete-toggle {
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
+
+}
+
+#vis-add-button {
 
 }
 

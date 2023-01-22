@@ -6,7 +6,7 @@ function randomValue(start, end) {
   return start + Math.random() * (end - start);
 }
 
-export function Visualization({ data }) {
+export function Visualization({ data, deleting, handleDelete }) {
   const ref = React.useRef();
   const [k, setK] = useState(1);
   const [x, setX] = useState(0);
@@ -31,16 +31,25 @@ export function Visualization({ data }) {
       const numLifeStages = [...new Set(d3.map(data, d => d.lifeStage))].length;
       const radiusStep = 1500 / (numLifeStages * 2); // TODO:
 
-      const colourScale = d3.scaleLinear()
+      const regularColourScale = d3.scaleLinear()
         .domain([0, numLifeStages])
         .range(["rgb(22,124,82)", "rgb(214,243,223)"]);
+
+      const deletingColourScale = d3.scaleLinear()
+        .domain([0, numLifeStages])
+        .range(["rgb(190,46,46)", "rgb(238,167,167)"]);
 
       const circles = chart.selectAll("circle")
         .data(data, d => d.value)
         .join("circle")
         .attr("class", "item")
-        .attr("fill", (d) => colourScale(d.lifeStage))
-        .attr("r", () => circleRadius + randomValue(-5, 5));
+        .attr("fill", (d) => deleting ? deletingColourScale(d.lifeStage) : regularColourScale(d.lifeStage))
+        .attr("r", () => circleRadius)
+        .on("click", (event) => {
+          if (deleting) {
+            handleDelete(event.target.__data__);
+          }
+        });
 
       const text = chart.selectAll("text")
         .data(data, d => d.value)
@@ -75,7 +84,7 @@ export function Visualization({ data }) {
           .attr("y", (d) => d.y);
       });
     },
-    [data]
+    [data, deleting]
   );
 
   return (
