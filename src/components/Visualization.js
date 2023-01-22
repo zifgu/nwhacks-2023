@@ -20,21 +20,24 @@ const CustomToggle = React.forwardRef(({ children, onClick, id, show }, ref) => 
   </Button>
 ));
 
-const CustomMenu = React.forwardRef(
-  ({ children, style, className, 'aria-labelledby': labeledBy, id }, ref) => {
+const CustomMenu = React.forwardRef(({ children, onClick, id }, ref) => {
+    const [show, setShow] = useState(false);
+
     return (
-      <div
-        id={id}
-        ref={ref}
-        style={style}
-        className={className}
-        aria-labelledby={labeledBy}
-      >
-        {children}
-      </div>
+        <Button
+            id={id}
+            className={show ? "active" : ""}
+            ref={ref}
+            onClick={(e) => {
+                e.preventDefault();
+                setShow(!show);
+                onClick(e);
+            }}
+        >
+            {children}
+        </Button>
     );
-  },
-);
+});
 
 export function Visualization({data, onAddItem, onDeleteItem, onNext, loading}) {
   const [deleting, setDeleting] = useState(false);
