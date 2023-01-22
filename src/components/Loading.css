@@ -1,8 +1,9 @@
- .loading-page {
-    width: 100vw;
+.loader-container {
+    width: 100%;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} 
-
+    position: fixed;
+    background: rgba(0, 0, 0, 0.834)
+        url("https://media.giphy.com/media/8agqybiK5LW8qrG3vJ/giphy.gif") center
+        no-repeat;
+    z-index: 1;
+}
