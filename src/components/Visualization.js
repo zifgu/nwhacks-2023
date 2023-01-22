@@ -12,8 +12,6 @@ export function Visualization({ data, deleting, handleDelete }) {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
 
-  const circleRadius = 75;
-
   useEffect(() => {
     const zoom = d3.zoom().on("zoom", (event) => {
       const { x, y, k } = event.transform;
@@ -26,10 +24,11 @@ export function Visualization({ data, deleting, handleDelete }) {
 
   useEffect(
     () => {
-      const chart = d3.select(ref.current).select('g');
+      const chart = d3.select(ref.current).select('g').select('g');
 
       const numLifeStages = [...new Set(d3.map(data, d => d.lifeStage))].length;
-      const radiusStep = 1500 / (numLifeStages * 2); // TODO:
+      const radiusStep = window.innerWidth / (numLifeStages * 2);
+      const circleRadius = 75;
 
       const regularColourScale = d3.scaleLinear()
         .domain([0, numLifeStages])
@@ -90,7 +89,9 @@ export function Visualization({ data, deleting, handleDelete }) {
   return (
     <div id="vis">
       <svg ref={ref} width="100%" height="100%">
-        <g transform={`translate(${x},${y})scale(${k})`}></g>
+        <g transform={`translate(${x},${y})scale(${k})`}>
+          <g transform={`translate(${window.innerWidth / 2}, ${window.innerHeight / 2})`}></g>
+        </g>
       </svg>
     </div>
   );
