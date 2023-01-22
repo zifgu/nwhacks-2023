@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import * as d3 from "d3";
 import "./Visualization.css";
 
@@ -6,25 +6,30 @@ function randomValue(start, end) {
   return start + Math.random() * (end - start);
 }
 
-export function Visualization({ data, width }) {
+export function Visualization({ data }) {
   const ref = React.useRef();
+  const [k, setK] = useState(1);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
 
-  const center = [width / 2, width / 2];
   const circleRadius = 75;
+
+  useEffect(() => {
+    const zoom = d3.zoom().on("zoom", (event) => {
+      const { x, y, k } = event.transform;
+      setK(k);
+      setX(x);
+      setY(y);
+    });
+    d3.select(ref.current).call(zoom);
+  }, []);
 
   useEffect(
     () => {
-      const chart = d3.select(ref.current)
-        .append("svg")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .call(d3.zoom().on("zoom", function () {
-          chart.attr("transform", d3.zoomTransform(this))
-        }))
-        .append("g");
+      const chart = d3.select(ref.current).select('g');
 
       const numLifeStages = [...new Set(d3.map(data, d => d.lifeStage))].length;
-      const radiusStep = width / (numLifeStages * 2);
+      const radiusStep = 1500 / (numLifeStages * 2); // TODO:
 
       const colourScale = d3.scaleLinear()
         .domain([0, numLifeStages])
@@ -74,6 +79,10 @@ export function Visualization({ data, width }) {
   );
 
   return (
-    <div id="vis" ref={ref}></div>
+    <div id="vis">
+      <svg ref={ref} width="100%" height="100%">
+        <g transform={`translate(${x},${y})scale(${k})`}></g>
+      </svg>
+    </div>
   );
 }

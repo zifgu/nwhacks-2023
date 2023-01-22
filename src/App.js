@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 import {Visualization} from "./components/Visualization";
-import {Button, FormControl} from "react-bootstrap";
+import {Button, Dropdown, FormControl} from "react-bootstrap";
 
 const initialData = [
   {
@@ -60,27 +60,83 @@ const initialData = [
   },
 ];
 
+const CustomToggle = React.forwardRef(({ children, onClick, id }, ref) => (
+  <Button
+    id={id}
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </Button>
+));
+
+const CustomMenu = React.forwardRef(
+  ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+    return (
+      <div
+        ref={ref}
+        style={style}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
 function App() {
   const [data, setData] = useState(initialData);
+  const [deleting, setDeleting] = useState(false);
   const [lifeStage, setLifeStage] = useState(0);
   const [item, setItem] = useState("");
 
   const addItem = () => {
-    setData([...data, {
-      lifeStage: lifeStage,
-      value: item,
-    }]);
+    setData([
+      ...data,
+      {
+        lifeStage: lifeStage,
+        value: item,
+      }
+    ]);
   }
 
   return (
     <div>
-      <FormControl type="text" value={item} onChange={(event) => setItem(event.target.value)}/>
-      <FormControl type="number" value={lifeStage} onChange={(event) => setLifeStage(parseInt(event.target.value))}/>
-      <Button onClick={addItem}>Add</Button>
       <Visualization
         data={data}
-        width={1200}
       />
+      <div id="vis-instructions">
+        Pan and zoom.
+      </div>
+      <div id="vis-add-delete-form">
+        <Dropdown>
+          <Dropdown.Toggle as={CustomToggle} id="vis-add-button">
+            +
+          </Dropdown.Toggle>
+          <Dropdown.Menu as={CustomMenu}>
+            <FormControl
+              id="vis-add-input"
+              type="text"
+              value={item}
+              onChange={(event) => setItem(event.target.value)}
+            />
+            <Button
+              onClick={addItem}
+            >
+              Add
+            </Button>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Button
+          id="vis-delete-button"
+        >
+          x
+        </Button>
+      </div>
     </div>
   );
 }
