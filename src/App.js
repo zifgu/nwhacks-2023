@@ -4,75 +4,73 @@ import {Visualization} from "./components/Visualization";
 import {WelcomePage} from "./components/WelcomePage";
 import {Questions} from "./components/Questions";
 import {EndPage} from "./components/EndPage";
-import {Loading} from "./components/Loading";
 import {getExtracurriculars, getHobbies, getSchoolSubjects} from "./api/openai";
 
-const initialData = [
-  {
-    value: "Math class",
-    lifeStage: 0,
-  },
-  {
-    value: "Dance class",
-    lifeStage: 0,
-  },
-  {
-    value: "Cheerful",
-    lifeStage: 0,
-  },
-  {
-    value: "Helpful",
-    lifeStage: 0,
-  },
-  {
-    value: "Shy",
-    lifeStage: 0,
-  },
-  {
-    value: "Piano lessons",
-    lifeStage: 0,
-  },
-  {
-    value: "Finance",
-    lifeStage: 0,
-  },
-  {
-    value: "Math class",
-    lifeStage: 1,
-  },
-  {
-    value: "Art class",
-    lifeStage: 1,
-  },
-  {
-    value: "Ballet lessons",
-    lifeStage: 1,
-  },
-  {
-    value: "Volunteer at hospital",
-    lifeStage: 1,
-  },
-  {
-    value: "Perform at a local theatre",
-    lifeStage: 1,
-  },
-  {
-    value: "Perform at a local theatre",
-    lifeStage: 2,
-  },
+const nextLifeStages = [
+  // 0: next = High school
+  [
+    {
+      function: getSchoolSubjects,
+      inputs: ["schoolSubjects"],
+    },
+    {
+      function: getExtracurriculars,
+      inputs: ["talents", "extracurriculars"],
+    },
+  ],
+  // 1: next = University
+  [
+    {
+      function: getSchoolSubjects,
+      inputs: ["interests", "schoolSubjects"],
+    },
+    {
+      function: getExtracurriculars,
+      inputs: ["talents", "extracurriculars"],
+    },
+  ],
+  // 2: next = Adulthood
+  [
+    {
+      function: getHobbies,
+      inputs: ["interests"],
+    },
+  ],
 ];
 
-const fetchData = async (queries) => {
-  const results = await Promise.allSettled([
-    getSchoolSubjects(queries.schoolClasses),
-    getExtracurriculars(queries.extracurriculars),
-    getHobbies(queries.interest),
-  ]);
+const maxLifeStage = nextLifeStages.length;
 
-  const allResults = []
+const getDataValuesByType = (data) => {
+  const result = {};
+  for (let item of data) {
+    if (item.type in result) {
+      result[item.type].push(item.value);
+    } else {
+      result[item.type] = [item.value];
+    }
+  }
+  return result;
+}
+
+const fetchNextLifeStage = async (lifeStage, dataSoFar) => {
+  const functionsToCall = nextLifeStages[lifeStage];
+
+  // Map: item type -> list of item values under that type
+  // TODO: do we want to exclude past life stages?
+  const dataGroupedByType = getDataValuesByType(dataSoFar);
+
+  const results = await Promise.allSettled(functionsToCall.map((f) => {
+    const args = f.inputs.map((inputType) => dataGroupedByType[inputType]);
+    return f.function(...args);
+  }));
+
+  const allResults = [];
   for (let result of results) {
     if (result.status === "fulfilled") {
-      allResults.push(...result.value);
+      allResults.push(...result.value.map((obj) => ({
+        ...obj,
+        lifeStage: lifeStage + 1,
+      })));
     } else {
       console.warn(result.reason);
     }
@@ -82,16 +80,32 @@ const fetchData = async (queries) => {
 };
 
 function App() {
-  // Possible values: "welcome", "questions", "loading", "vis", "end"
-  const [currentPage, setCurrentPage] = useState("welcome")
+  // Possible values: "welcome", "questions", "vis", "end"
+  const [currentPage, setCurrentPage] = useState("welcome");
+  const [loading, setLoading] = useState(false);
 
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
+  const [lifeStage, setLifeStage] = useState(0);
 
-  const fetchFirstLifeStage = async (info) => {
-    // TODO: process and visualize results
-    console.log(info);
-    const allResults = await fetchData(info);
-    console.log(allResults);
+  const initializeData = (info) => {
+    const newData = [];
+    newData.push(...info.talents.map((s) => ({value: s, type: "talents", lifeStage: 0})));
+    newData.push(...info.interests.map((s) => ({value: s, type: "interests", lifeStage: 0})));
+    newData.push(...info.schoolSubjects.map((s) => ({value: s, type: "schoolSubjects", lifeStage: 0})));
+    newData.push(...info.extracurriculars.map((s) => ({value: s, type: "extracurriculars", lifeStage: 0})));
+    newData.push(...info.personalityTraits.map((s) => ({value: s, type: "personalityTraits", lifeStage: 0})));
+    setData(newData);
+  }
+
+  const handleNext = async (currentData) => {
+    setLoading(true);
+
+    const allResults = await fetchNextLifeStage(lifeStage, currentData);
+    setLifeStage(lifeStage + 1);
+
+    setData([...data, ...allResults]);
+
+    setLoading(false);
   };
 
   let pageContent = null;
@@ -101,22 +115,26 @@ function App() {
       break;
     case "questions":
       pageContent = <Questions onFinish={async (info) => {
-        setCurrentPage("loading");
-        await fetchFirstLifeStage(info);
+        initializeData(info);
         setCurrentPage("vis");
       }}/>;
-      break;
-    case "loading":
-      pageContent = <Loading />;
       break;
     case "vis":
       pageContent = (
         <Visualization
           data={data}
+          loading={loading}
           onAddItem={(item) => setData([...data, item])}
           onDeleteItem={(item) => {
             const newData = data.filter((i) => i.lifeStage !== item.lifeStage || i.value !== item.value);
             setData(newData);
+          }}
+          onNext={async () => {
+            if (lifeStage < maxLifeStage) {
+              await handleNext(data);
+            } else {
+              setCurrentPage("end");
+            }
           }}
         />
       );

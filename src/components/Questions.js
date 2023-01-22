@@ -4,9 +4,9 @@ import "./Questions.css";
 export function Questions({onFinish}) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [talent, setTalent] = useState("");
-  const [interest, setInterest] = useState("");
-  const [schoolClasses, setSchoolClasses] = useState("");
+  const [talents, setTalents] = useState("");
+  const [interests, setInterests] = useState("");
+  const [schoolSubjects, setSchoolSubjects] = useState("");
   const [extracurriculars, setExtracurriculars] = useState("");
   const [personalityTraits, setPersonalityTraits] = useState("");
 
@@ -20,11 +20,11 @@ export function Questions({onFinish}) {
     onFinish({
       name,
       age,
-      talent,
-      interest,
-      schoolClasses,
-      extracurriculars,
-      personalityTraits,
+      talents: [talents],
+      interests: [interests],
+      schoolSubjects: [schoolSubjects],
+      extracurriculars: [extracurriculars],
+      personalityTraits: [personalityTraits],
     });
   };
 
@@ -58,7 +58,7 @@ export function Questions({onFinish}) {
             <div className="question-header">
               <label>What are your talents? </label>
             </div>
-            <input type="text" className="question-input" value={talent} onChange={(e) => setTalent(e.target.value)}/>
+            <input type="text" className="question-input" value={talents} onChange={(e) => setTalents(e.target.value)}/>
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function Questions({onFinish}) {
             <div className="question-header">
               <label>What are your interests? </label>
             </div>
-            <input type="text" className="question-input" value={interest} onChange={(e) => setInterest(e.target.value)}/>
+            <input type="text" className="question-input" value={interests} onChange={(e) => setInterests(e.target.value)}/>
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function Questions({onFinish}) {
             <div className="question-header">
               <label>What are your favourite courses? </label>
             </div>
-            <input type="text" className="question-input" value={schoolClasses} onChange={(e) => setSchoolClasses(e.target.value)}/>
+            <input type="text" className="question-input" value={schoolSubjects} onChange={(e) => setSchoolSubjects(e.target.value)}/>
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
