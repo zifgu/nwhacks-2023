@@ -76,3 +76,29 @@
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
+
+.answer-items {
+    width: 100%;
+    padding: 0 2rem;
+
+}
+
+.answer-item {
+    background-color: rgba(255 255 255 / 50%);
+    color: black;
+    font-size: 20px;
+
+    border-radius: 1rem;
+    padding: 0.5rem 0.75rem;
+    margin-right: 1rem;
+}
+.answer-item:hover {
+    background-color: rgba(255 255 255 / 40%);
+}
+
+.answer-item-x {
+    margin-left: 0.5rem;
+}
+.answer-item-x:hover {
+    opacity: 50%;
+}

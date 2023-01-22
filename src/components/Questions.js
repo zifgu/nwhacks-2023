@@ -1,14 +1,16 @@
 import React, {useState} from "react";
 import "./Questions.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTimes} from "@fortawesome/free-solid-svg-icons";
 
 export function Questions({onFinish}) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [talents, setTalents] = useState("");
-  const [interests, setInterests] = useState("");
-  const [schoolSubjects, setSchoolSubjects] = useState("");
-  const [extracurriculars, setExtracurriculars] = useState("");
-  const [personalityTraits, setPersonalityTraits] = useState("");
+  const [talents, setTalents] = useState([]);
+  const [interests, setInterests] = useState([]);
+  const [schoolSubjects, setSchoolSubjects] = useState([]);
+  const [extracurriculars, setExtracurriculars] = useState([]);
+  const [personalityTraits, setPersonalityTraits] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(2);
 
@@ -20,11 +22,11 @@ export function Questions({onFinish}) {
     onFinish({
       name,
       age,
-      talents: [talents],
-      interests: [interests],
-      schoolSubjects: [schoolSubjects],
-      extracurriculars: [extracurriculars],
-      personalityTraits: [personalityTraits],
+      talents,
+      interests,
+      schoolSubjects,
+      extracurriculars,
+      personalityTraits,
     });
   };
 
@@ -58,7 +60,11 @@ export function Questions({onFinish}) {
             <div className="question-header">
               <label>What are your talents? </label>
             </div>
-            <input type="text" className="question-input" value={talents} onChange={(e) => setTalents(e.target.value)}/>
+            <MultipleInput
+              items={talents}
+              onAddItem={(item) => setTalents([...talents, item])}
+              onRemoveItem={(index) => setTalents(talents.filter((_, i) => i !== index))}
+            />
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -67,9 +73,13 @@ export function Questions({onFinish}) {
         <div className="page5">
           <div className="question-container">
             <div className="question-header">
-              <label>What are your interests? </label>
+              <label>What are you interested in? </label>
             </div>
-            <input type="text" className="question-input" value={interests} onChange={(e) => setInterests(e.target.value)}/>
+            <MultipleInput
+              items={interests}
+              onAddItem={(item) => setInterests([...interests, item])}
+              onRemoveItem={(index) => setInterests(interests.filter((_, i) => i !== index))}
+            />
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -78,9 +88,13 @@ export function Questions({onFinish}) {
         <div className="page6">
           <div className="question-container">
             <div className="question-header">
-              <label>What are your favourite courses? </label>
+              <label>What are your favourite classes? </label>
             </div>
-            <input type="text" className="question-input" value={schoolSubjects} onChange={(e) => setSchoolSubjects(e.target.value)}/>
+            <MultipleInput
+              items={schoolSubjects}
+              onAddItem={(item) => setSchoolSubjects([...schoolSubjects, item])}
+              onRemoveItem={(index) => setSchoolSubjects(schoolSubjects.filter((_, i) => i !== index))}
+            />
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -89,9 +103,13 @@ export function Questions({onFinish}) {
         <div className="page7">
           <div className="question-container">
             <div className="question-header">
-              <label>What are your extracurriculars? </label>
+              <label>What extracurricular activities do you like?</label>
             </div>
-            <input type="text" className="question-input" value={extracurriculars} onChange={(e) => setExtracurriculars(e.target.value)}/>
+            <MultipleInput
+              items={extracurriculars}
+              onAddItem={(item) => setExtracurriculars([...extracurriculars, item])}
+              onRemoveItem={(index) => setExtracurriculars(extracurriculars.filter((_, i) => i !== index))}
+            />
             <button className="button" onClick={handleNext}>Next</button>
           </div>
         </div>
@@ -102,11 +120,64 @@ export function Questions({onFinish}) {
             <div className="question-header">
               <label>What are some of your personality traits? </label>
             </div>
-            <input type="text" className="question-input" value={personalityTraits} onChange={(e) => setPersonalityTraits(e.target.value)}/>
+            <MultipleInput
+              items={personalityTraits}
+              onAddItem={(item) => setPersonalityTraits([...personalityTraits, item])}
+              onRemoveItem={(index) => setPersonalityTraits(personalityTraits.filter((_, i) => i !== index))}
+            />
             <button className="button" onClick={handleSubmit}>Next</button>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function MultipleInput({ items, onAddItem, onRemoveItem }) {
+  const [newItem, setNewItem] = useState("");
+
+  const addItem = () => {
+    if (newItem.length > 0) {
+      onAddItem(newItem);
+      setNewItem("");
+    }
+  };
+
+  const removeItem = (index) => {
+    onRemoveItem(index);
+  }
+
+  return (
+    <div>
+      <div className="answer-items">
+        {
+          items.map((item, index) => (
+            <span
+              key={item}
+              className="answer-item"
+            >
+              {item}
+              <FontAwesomeIcon
+                className="answer-item-x"
+                icon={faTimes}
+                onClick={() => removeItem(index)}
+              />
+            </span>
+          ))
+        }
+      </div>
+      <input
+        type="text"
+        className="question-input"
+        value={newItem}
+        onChange={(e) => setNewItem(e.target.value)}
+      />
+      <button
+        onClick={() => addItem()}
+        className="button"
+      >
+        Add
+      </button>
     </div>
   );
 }
