@@ -7,6 +7,7 @@ import {EndPage} from "./components/EndPage";
 import {Loading} from "./components/Loading";
 import {getSchoolSubjects} from "./api/openai1";
 import {getExtracurriculars} from "./api/openai2";
+import {getHobbies} from "./api/openai3";
 
 const initialData = [
   {
@@ -67,6 +68,7 @@ const fetchData = async (queries) => {
   const results = await Promise.allSettled([
     getSchoolSubjects(queries.schoolClasses),
     getExtracurriculars(queries.extracurriculars),
+    getHobbies(queries.interest),
   ]);
 
   return results
@@ -81,7 +83,7 @@ function App() {
   const [data, setData] = useState(initialData);
 
   const fetchFirstLifeStage = (info) => {
-    // TODO: visualize results
+    // TODO: process and visualize results
     console.log(info);
     const allResults = fetchData(info);
     console.log(allResults);
