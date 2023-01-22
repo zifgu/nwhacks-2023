@@ -5,9 +5,7 @@ import {WelcomePage} from "./components/WelcomePage";
 import {Questions} from "./components/Questions";
 import {EndPage} from "./components/EndPage";
 import {Loading} from "./components/Loading";
-import {getSchoolSubjects} from "./api/openai1";
-import {getExtracurriculars} from "./api/openai2";
-import {getHobbies} from "./api/openai3";
+import {getExtracurriculars, getHobbies, getSchoolSubjects} from "./api/openai";
 
 const initialData = [
   {
@@ -71,9 +69,16 @@ const fetchData = async (queries) => {
     getHobbies(queries.interest),
   ]);
 
-  return results
-    .filter((result) => result.status === "fulfilled")
-    .map((result) => result.value);
+  const allResults = []
+  for (let result of results) {
+    if (result.status === "fulfilled") {
+      allResults.push(...result.value);
+    } else {
+      console.warn(result.reason);
+    }
+  }
+
+  return allResults;
 };
 
 function App() {
@@ -82,10 +87,10 @@ function App() {
 
   const [data, setData] = useState(initialData);
 
-  const fetchFirstLifeStage = (info) => {
+  const fetchFirstLifeStage = async (info) => {
     // TODO: process and visualize results
     console.log(info);
-    const allResults = fetchData(info);
+    const allResults = await fetchData(info);
     console.log(allResults);
   };
 
