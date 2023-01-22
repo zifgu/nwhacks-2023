@@ -1,145 +1,67 @@
-import React from "react";
+import React, {useEffect} from "react";
 import * as d3 from "d3";
 import "./Visualization.css";
 
-export function Visualization(props) {
-  return (
-    <div id="vis">
-      <Chart2 id="vis" {...props}/>
-    </div>
-  );
+function randomValue(start, end) {
+  return start + Math.random() * (end - start);
 }
 
-function useD3(renderChartFn, dependencies) {
+export function Visualization({ data, width }) {
   const ref = React.useRef();
 
-  React.useEffect(() => {
-    renderChartFn(d3.select(ref.current));
-    return () => {};
-  }, dependencies);
-  return ref;
-}
-
-function Chart2({ data, width, numLifeStages }) {
   const center = [width / 2, width / 2];
-  const radiusStep = width / (numLifeStages * 2);
-  const textOffsetRadius = radiusStep / 3;
+  const circleRadius = 75;
 
-  const ref = useD3(
-    (chart) => {
-      function countPerLifeStage(d) {
-        const result = {};
+  useEffect(
+    () => {
+      const chart = d3.select(ref.current);
 
-        for (let item of d) {
-          if (item.lifeStage in result) {
-            result[item.lifeStage] += 1;
-          } else {
-            result[item.lifeStage] = 1;
-          }
-        }
-
-        return result;
-      }
-
-      function getTextAngle(d, index) {
-        const itemsInLifeStage = itemsInLifeStages[d.lifeStage];
-        return index * (2 * Math.PI) / itemsInLifeStage;
-      }
-
-      function getTextTransform(d, index) {
-        const angle = getTextAngle(d, index);
-        const r = (d.lifeStage + 1) * radiusStep - textOffsetRadius;
-        const x = r * Math.cos(angle);
-        const y = r * Math.sin(angle);
-        return [x, y];
-      }
-
-      const groupedData = d3.groups(data, d => d.lifeStage);
-      const itemsInLifeStages = countPerLifeStage(data);
+      const numLifeStages = [...new Set(d3.map(data, d => d.lifeStage))].length;
+      const radiusStep = width / (numLifeStages * 2);
 
       const colourScale = d3.scaleLinear()
         .domain([0, numLifeStages])
-        .range(["lightgreen", "darkgreen"]);
+        .range(["rgb(22,124,82)", "rgb(214,243,223)"]);
 
-      // Rings
-      const arc = d3.arc()
-        .startAngle(0)
-        .endAngle(2 * Math.PI)
-        .innerRadius((d) => d[0] * radiusStep)
-        .outerRadius((d) => (d[0] + 1) * radiusStep);
+      const circles = chart.selectAll("circle")
+        .data(data, d => d.value)
+        .join("circle")
+        .attr("class", "item")
+        .attr("fill", (d) => colourScale(d.lifeStage))
+        .attr("r", () => circleRadius + randomValue(-5, 5));
 
-      const rings = chart.selectAll("path")
-        .data(groupedData, d => d[0]);
+      const text = chart.selectAll("text")
+        .data(data, d => d.value)
+        .join("text")
+        .attr("class", "label")
+        .text(d => d.value)
+        .style("text-anchor", "middle");
 
-      const ringsEnter = rings
-        .enter()
-        .append("path");
+      const simulation = d3
+        .forceSimulation()
+        .force(
+          "collide",
+          d3.forceCollide()
+            .strength(0.5)
+            .radius(d => circleRadius)
+            .iterations(1)
+        )
+        .force(
+          "radial",
+          d3.forceRadial()
+            .strength(0.1)
+            .radius(d => radiusStep * (d.lifeStage + 1) - radiusStep / 2)
+        ); // Force that avoids circle overlapping
 
-      ringsEnter.merge(rings)
-        .attr("d", arc)
-        .attr("fill", (d) => {
-          return colourScale(d[0]);
-        });
+      // Apply these forces to the nodes and update their positions.
+      // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+      simulation.nodes(data).on("tick", function (d) {
+        circles.attr("cx", (d) => d.x)
+          .attr("cy", (d) => d.y);
 
-      rings.exit().remove();
-
-      // Group by life stage
-      const lifeStageGroups = chart.selectAll("g")
-        .data(groupedData)
-        .join("g");
-
-      // Rects
-      const textRects = lifeStageGroups.selectAll("rect")
-        .data(d => d[1], d => d.value);
-
-      const textRectsEnter = textRects.enter()
-        .append("rect")
-        .style("fill", "lightpink");
-
-      // Text
-      const text = lifeStageGroups.selectAll("text")
-        .data(d => d[1], d => d.value);
-
-      const textEnter = text.enter()
-        .append("text");
-
-      textEnter.merge(text)
-        .text((d) => d.value)
-        .each(function(d, index) {
-          // Save calculated attributes
-          d.bbox = this.getBBox();
-
-          const angle = getTextAngle(d, index);
-          d.anchor = (Math.PI / 2 <= angle && angle <= 3 * Math.PI / 2) ? "end" : "start";
-        })
-        .style("text-anchor", (d) => d.anchor)
-        .transition()
-        .duration(500)
-        .attr("transform", (d, index) => {
-          return `translate(${getTextTransform(d, index)})`;
-        });
-
-      text.exit().remove();
-
-      // Update rect size and position
-      const xMargin = 10;
-      const yMargin = 2.5;
-
-      textRects.merge(textRectsEnter)
-        .attr("width", d => d.bbox.width + 2 * xMargin)
-        .attr("height", d => d.bbox.height + 2 * yMargin)
-        .attr("rx", d => d.bbox.height / 2);
-
-      textRects.merge(textRectsEnter)
-        .transition()
-        .duration(500)
-        .attr("transform", (d, index) => {
-          const textTransform = getTextTransform(d, index);
-          return `translate(${[
-            textTransform[0] - xMargin - (d.anchor === "end" ? d.bbox.width : 0),
-            textTransform[1] - yMargin - d.bbox.height * 3 / 4,
-          ]})`;
-        });
+        text.attr("x", (d) => d.x)
+          .attr("y", (d) => d.y);
+      });
     },
     [data]
   );

@@ -70,9 +70,6 @@ function App() {
       lifeStage: lifeStage,
       value: item,
     }]);
-
-    setLifeStage(0);
-    setItem("");
   }
 
   return (
@@ -83,7 +80,6 @@ function App() {
       <Visualization
         data={data}
         width={1200}
-        numLifeStages={3}
       />
     </div>
   );
